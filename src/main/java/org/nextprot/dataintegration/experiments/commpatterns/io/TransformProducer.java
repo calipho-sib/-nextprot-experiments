@@ -13,7 +13,7 @@ public class TransformProducer {
 
         try {
             long startTime = System.currentTimeMillis();
-            String inputFile = TransformProducer.class.getClassLoader().getResource("result_partition_100.json").getPath();
+            String inputFile = TransformProducer.class.getClassLoader().getResource("data.json").getPath();
             BufferedJsonStatementReader bufferedJsonStatementReader = new BufferedJsonStatementReader(new FileReader(inputFile), 100);
             int count = 0;
 
@@ -33,12 +33,5 @@ public class TransformProducer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-}
-
-class TransformFunction {
-
-    public void compute(Statement statement) {
-
     }
 }
