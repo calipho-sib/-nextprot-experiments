@@ -16,7 +16,8 @@ import java.util.Properties;
 
 public class TransformProducer {
 
-    private Producer<String, OutputStatement> producer;
+    //private Producer<String, OutputStatement> producer;
+    private Producer<String, String> producer;
 
     private String topic;
 
@@ -27,15 +28,16 @@ public class TransformProducer {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StatementSerializer.class.getName());
         //properties.put("schema.registry.url", "http://127.0.0.1:8081");
-        producer = new KafkaProducer<String, OutputStatement>(properties);
+        producer = new KafkaProducer<String, String>(properties);
 
         // Topic
         this.topic = topic;
     }
 
-    public void produce(OutputStatement outputStatement) {
+    public void produce(String outputStatement) {
 
-        ProducerRecord<String, OutputStatement> record = new ProducerRecord<String, OutputStatement>(topic, "k",outputStatement);
+        //ProducerRecord<String, OutputStatement> record = new ProducerRecord<String, OutputStatement>(topic, "k",outputStatement);
+        ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, "k",outputStatement);
         producer.send(record);
         //producer.close();
     }
@@ -56,6 +58,8 @@ public class TransformProducer {
 
         BufferedJsonStatementWriter writer = new BufferedJsonStatementWriter();
         writer.startWritingArray();
+        int batchSize = 0;
+        String outputStatment = "";
         while(bufferedJsonStatementReader.hasStatement()) {
             try {
                 Statement statement = bufferedJsonStatementReader.nextStatement();
@@ -64,8 +68,16 @@ public class TransformProducer {
                 String annotationCategory = statement.getAnnotationCategory();
                 String annotationId = statement.getValue(CoreStatementField.BIOLOGICAL_OBJECT_ACCESSION);
 
-                OutputStatement outputStatement = new OutputStatement(entryAccession, annotationCategory, annotationId);
-                transformProducer.produce(outputStatement);
+                //OutputStatement outputStatement = new OutputStatement(entryAccession, annotationCategory, annotationId);
+
+                if(batchSize < 100 ){
+                    batchSize++;
+                    outputStatment += "accession:" + entryAccession + ",category: " + annotationCategory + ", id: " + annotationId;
+                } else {
+                    transformProducer.produce(outputStatment);
+                    outputStatment = "";
+                    batchSize = 0;
+                }
 
                 count++;
                 //if(count > 10 ) break;

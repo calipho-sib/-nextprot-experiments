@@ -21,10 +21,10 @@ public class TransformProducer {
             writer.startWritingArray();
             while(bufferedJsonStatementReader.hasStatement()) {
                 Statement statement = bufferedJsonStatementReader.nextStatement();
-
+                System.out.println();
                 // Write back the statements to an output file
                 writer.writeStatement(statement);
-                count++;
+                //System.out.println("Writing statment " + ++count + statement.toJsonString());
             }
             writer.endWritingArray();
             System.out.println(count + " Statements are written to output file");

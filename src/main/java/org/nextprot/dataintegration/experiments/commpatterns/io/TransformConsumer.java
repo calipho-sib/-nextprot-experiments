@@ -1,5 +1,6 @@
 package org.nextprot.dataintegration.experiments.commpatterns.io;
 
+import org.nextprot.commons.statements.Statement;
 import org.nextprot.commons.statements.reader.BufferedJsonStatementReader;
 
 import java.io.FileReader;
@@ -15,8 +16,8 @@ public class TransformConsumer {
             BufferedJsonStatementReader bufferedJsonStatementReader = new BufferedJsonStatementReader(new FileReader(inputFile), 100);
             int count = 0;
             while(bufferedJsonStatementReader.hasStatement()) {
-                System.out.println("Loading statement " + ++count);
-                bufferedJsonStatementReader.nextStatement();
+                Statement statment = bufferedJsonStatementReader.nextStatement();
+                System.out.println("Loading statement " + ++count + " ");
             }
         } catch (IOException e) {
             e.printStackTrace();

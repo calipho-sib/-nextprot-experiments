@@ -13,11 +13,13 @@ import java.io.IOException;
 
 public class BufferedJsonStatementWriter {
 
+    FileOutputStream stream;
+
     JsonGenerator jGenerator;
 
     public BufferedJsonStatementWriter() {
         try {
-            FileOutputStream stream = new FileOutputStream(new File("output.json"));
+            stream = new FileOutputStream(new File("output.json"));
             JsonFactory jfactory = new JsonFactory();
             jGenerator = jfactory.createGenerator(stream, JsonEncoding.UTF8);
         } catch (IOException e) {
@@ -38,6 +40,7 @@ public class BufferedJsonStatementWriter {
             jGenerator.writeEndArray();
             jGenerator.flush();
             jGenerator.close();
+            stream.close();
         } catch(IOException e) {
             e.printStackTrace();
         }
