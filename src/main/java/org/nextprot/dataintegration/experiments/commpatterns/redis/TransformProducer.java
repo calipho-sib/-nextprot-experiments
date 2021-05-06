@@ -3,7 +3,6 @@ package org.nextprot.dataintegration.experiments.commpatterns.redis;
 import org.nextprot.commons.statements.Statement;
 import org.nextprot.commons.statements.reader.BufferedJsonStatementReader;
 import org.nextprot.commons.statements.specs.CoreStatementField;
-import org.nextprot.dataintegration.experiments.commpatterns.org.nextprot.dataintegration.utils.BufferedJsonStatementWriter;
 import redis.clients.jedis.Jedis;
 
 import java.io.FileReader;

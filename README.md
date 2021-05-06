@@ -17,5 +17,8 @@ This experiment compares different possiblities for such inter component communi
 
 2. Kafka Pub/Sub Messaging
 
+Start kafka broker wit hthe docker-compose.yml
+docker-compose -f docker-compose.yml up
+
 3. Redis Producer Consumer List 
 

@@ -27,13 +27,14 @@ public class TransformConsumer implements Runnable{
     public void run() {
         System.out.println("Starting the consumer and subscribed to topic ");
         long startTime = System.currentTimeMillis();
-        final int giveUp = 100;   int noRecordsCount = 0;
+        final int giveUp = 10;   int noRecordsCount = 0;
 
         int count = 0;
         while (true) {
             final ConsumerRecords<String, String> consumerRecords = consumer.poll(1000);
 
             if (consumerRecords.count()==0) {
+                System.out.println("No statements");
                 noRecordsCount++;
                 if (noRecordsCount > giveUp) break;
                 else continue;

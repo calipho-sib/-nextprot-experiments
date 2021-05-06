@@ -70,7 +70,7 @@ public class TransformProducer {
 
                 //OutputStatement outputStatement = new OutputStatement(entryAccession, annotationCategory, annotationId);
 
-                if(batchSize < 200 ){
+                if(batchSize < 1000 ){
                     batchSize++;
                     outputStatment += "accession:" + entryAccession + ",category: " + annotationCategory + ", id: " + annotationId;
                 } else {
