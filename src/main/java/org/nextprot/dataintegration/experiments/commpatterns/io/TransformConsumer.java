@@ -13,7 +13,7 @@ public class TransformConsumer {
         String inputFile = "output.json";
 
         try {
-            BufferedJsonStatementReader bufferedJsonStatementReader = new BufferedJsonStatementReader(new FileReader(inputFile), 100);
+            BufferedJsonStatementReader bufferedJsonStatementReader = new BufferedJsonStatementReader(new FileReader(inputFile), 1000);
             int count = 0;
             while(bufferedJsonStatementReader.hasStatement()) {
                 Statement statment = bufferedJsonStatementReader.nextStatement();

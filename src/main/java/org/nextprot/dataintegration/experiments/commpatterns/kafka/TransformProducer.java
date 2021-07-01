@@ -17,7 +17,7 @@ import java.util.Properties;
 public class TransformProducer {
 
     //private Producer<String, OutputStatement> producer;
-    private Producer<String, String> producer;
+    private Producer<String, OutputStatement> producer;
 
     private String topic;
 
@@ -28,16 +28,16 @@ public class TransformProducer {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StatementSerializer.class.getName());
         //properties.put("schema.registry.url", "http://127.0.0.1:8081");
-        producer = new KafkaProducer<String, String>(properties);
+        producer = new KafkaProducer<String, OutputStatement>(properties);
 
         // Topic
         this.topic = topic;
     }
 
-    public void produce(String outputStatement) {
+    public void produce(OutputStatement outputStatement) {
 
         //ProducerRecord<String, OutputStatement> record = new ProducerRecord<String, OutputStatement>(topic, "k",outputStatement);
-        ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, "k",outputStatement);
+        ProducerRecord<String, OutputStatement> record = new ProducerRecord<String, OutputStatement>(topic, "k",outputStatement);
         producer.send(record);
         //producer.close();
     }
@@ -68,13 +68,14 @@ public class TransformProducer {
                 String annotationCategory = statement.getAnnotationCategory();
                 String annotationId = statement.getValue(CoreStatementField.BIOLOGICAL_OBJECT_ACCESSION);
 
-                //OutputStatement outputStatement = new OutputStatement(entryAccession, annotationCategory, annotationId);
+                OutputStatement outputStatement = new OutputStatement(entryAccession, annotationCategory, annotationId);
 
                 if(batchSize < 1000 ){
                     batchSize++;
                     outputStatment += "accession:" + entryAccession + ",category: " + annotationCategory + ", id: " + annotationId;
                 } else {
-                    transformProducer.produce(outputStatment);
+                    System.out.println("Writing statment " + count + outputStatment);
+                    transformProducer.produce(outputStatement);
                     outputStatment = "";
                     batchSize = 0;
                 }
@@ -87,7 +88,7 @@ public class TransformProducer {
 
         }
 
-        System.out.println(count + " Statements are written to output file");
+        System.out.println(count + " Statements are written to kafka broker");
         long endTime = System.currentTimeMillis();
         System.out.println("Elapsed time " + (endTime - startTime) + " milliseconds");
 

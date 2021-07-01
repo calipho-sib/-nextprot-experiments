@@ -2,23 +2,25 @@ package org.nextprot.dataintegration.experiments.commpatterns.kafka;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.nextprot.commons.statements.Statement;
 
 import java.util.Collections;
 import java.util.Properties;
 
 public class TransformConsumer implements Runnable{
 
-    private Consumer<String, String> consumer;
+    private Consumer<String, OutputStatement> consumer;
 
     public TransformConsumer(String topic) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConfig.KAFKA_BROKERS);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, KafkaConfig.GROUP_ID_CONFIG);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StatementDeserializer.class.getName());
 
         // Create the consumer using props.
-        consumer = new KafkaConsumer<String, String>(props);
+        consumer = new KafkaConsumer(props);
 
         // Subscribe to the topic.
         consumer.subscribe(Collections.singletonList(topic));
@@ -31,7 +33,7 @@ public class TransformConsumer implements Runnable{
 
         int count = 0;
         while (true) {
-            final ConsumerRecords<String, String> consumerRecords = consumer.poll(1000);
+            final ConsumerRecords<String, OutputStatement> consumerRecords = consumer.poll(1000);
 
             if (consumerRecords.count()==0) {
                 System.out.println("No statements");
@@ -41,7 +43,7 @@ public class TransformConsumer implements Runnable{
             }
 
             for(ConsumerRecord record: consumerRecords) {
-               System.out.println("Reading statement" + (++count*100) + " " + record.value().toString());
+               System.out.println("Reading statement" + (++count) + " " + record.value().toString());
             }
 
             consumer.commitAsync();

@@ -14,7 +14,7 @@ public class TransformProducer {
         try {
             long startTime = System.currentTimeMillis();
             String inputFile = TransformProducer.class.getClassLoader().getResource("data.json").getPath();
-            BufferedJsonStatementReader bufferedJsonStatementReader = new BufferedJsonStatementReader(new FileReader(inputFile), 100);
+            BufferedJsonStatementReader bufferedJsonStatementReader = new BufferedJsonStatementReader(new FileReader(inputFile), 1000);
             int count = 0;
 
             BufferedJsonStatementWriter writer = new BufferedJsonStatementWriter();
